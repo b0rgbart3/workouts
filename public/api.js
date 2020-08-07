@@ -2,6 +2,7 @@ const API = {
   async getLastWorkout() {
     let res;
     try {
+      console.log("Trying to get last workout.");
       res = await fetch("/api/workouts");
     } catch (err) {
       console.log(err)
@@ -13,6 +14,7 @@ const API = {
   async addExercise(data) {
     const id = location.search.split("=")[1];
 
+    console.log("About to put: "+JSON.stringify(data));
     const res = await fetch("/api/workouts/" + id, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
