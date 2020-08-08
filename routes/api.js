@@ -1,8 +1,8 @@
 const router = require("express").Router();
 const Workout = require("../models/workout.js");
 
-const { db } = require("../models/workout.js");
-const mongoose = require("mongoose");
+// const { db } = require("../models/workout.js");
+// const mongoose = require("mongoose");
 
 router.post("/api/workouts", ({body},res) => {
   console.log("In the post route: body = " + JSON.stringify(body));
