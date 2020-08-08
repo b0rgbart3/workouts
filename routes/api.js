@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const Workout = require("../models/workout.js");
-const Exercise = require("../models/exercise.js");
+
 const { db } = require("../models/workout.js");
 const mongoose = require("mongoose");
 
@@ -16,39 +16,50 @@ router.post("/api/workouts", ({body},res) => {
 });
 
  
-router.put("/api/workouts/:id", (req, res) => {
-  console.log("Looking to find id: "+ req.params.id);
-  console.log("Looking to add: " + JSON.stringify(req.body));
+router.put("/api/workouts/:id", (req,res) => {
+  Workout.findByIdAndUpdate(req.params.id, {$push: { exercises: [req.body] }}).then( updatedWorkout => {
+              res.json(updatedWorkout);
+          })
+        .catch(err => {
+           console.log("Catch: " + err);
+            res.status(400).json(err);
+            }); 
+    
+  });
 
-  let id = req.params.id;
-  //let id= mongoose.Types.ObjectId(req.params.id);
+// router.put("/api/workouts/:id", (req, res) => {
+//   console.log("Looking to find id: "+ req.params.id);
+//   console.log("Looking to add: " + JSON.stringify(req.body));
 
-  Exercise.create(req.body).then(
-    createdExercise => {
+//   let id = req.params.id;
+//   //let id= mongoose.Types.ObjectId(req.params.id);
 
-      Workout.findByIdAndUpdate(id, {
-        $push: { exercises: createdExercise._id } 
-      }).then(
-        existingWorkout => { 
-          console.log("Saved: ", existingWorkout);
-          res.send(existingWorkout);}
-      ).catch(err => {
-        console.log("Catch Saving Workout Error: " + err);
-        res.status(400).json(err);
-      })
-    }
+//   Exercise.create(req.body).then(
+//     createdExercise => {
 
-  ).catch(err => {
-      console.log("Catch: " + err);
-      res.status(400).json(err);
-    });
+//       Workout.findByIdAndUpdate(id, {
+//         $push: { exercises: createdExercise._id } 
+//       }).then(
+//         existingWorkout => { 
+//           console.log("Saved: ", existingWorkout);
+//           res.send(existingWorkout);}
+//       ).catch(err => {
+//         console.log("Catch Saving Workout Error: " + err);
+//         res.status(400).json(err);
+//       })
+//     }
+
+//   ).catch(err => {
+//       console.log("Catch: " + err);
+//       res.status(400).json(err);
+//     });
   
  
 
 
 
 
-});
+//});
 
 
 
@@ -66,8 +77,9 @@ router.get("/api/workouts/:id",(req,res) => {
 router.get("/api/workouts",(req,res) => {
   console.log("In the Get ROUTE");
   Workout.find({})
-  .then( dbWorkout => {
-    res.json(dbWorkout);
+  .then( dbWorkouts => {
+   // console.log("Got: " + JSON.stringify(dbWorkouts))
+    res.json(dbWorkouts);
   }).catch(err => {
     res.status(400).json(err);
   });

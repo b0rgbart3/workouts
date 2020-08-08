@@ -8,7 +8,7 @@ async function initWorkout() {
 
     const workoutSummary = {
       date: formatDate(lastWorkout.day),
-      totalDuration: lastWorkout.totalDuration,
+     // totalDuration: lastWorkout.totalDuration,
       numExercises: lastWorkout.exercises.length,
       ...tallyExercises(lastWorkout.exercises)
     };
@@ -21,6 +21,14 @@ async function initWorkout() {
 
 function tallyExercises(exercises) {
   const tallied = exercises.reduce((acc, curr) => {
+        // new by Bart
+         if (acc.totalDuration) {
+          console.log("Calculating total Duration");
+        acc.totalDuration = acc.totalDuration + curr.duration; 
+        } else {
+          console.log("First calcuation: " + curr.duration);
+          acc.totalDuration = curr.duration;
+        }
     if (curr.type === "resistance") {
       acc.totalWeight = (acc.totalWeight || 0) + curr.weight;
       acc.totalSets = (acc.totalSets || 0) + curr.sets;
@@ -28,8 +36,10 @@ function tallyExercises(exercises) {
     } else if (curr.type === "cardio") {
       acc.totalDistance = (acc.totalDistance || 0) + curr.distance;
     }
+
     return acc;
   }, {});
+  
   return tallied;
 }
 
