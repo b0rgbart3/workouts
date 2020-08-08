@@ -74,6 +74,18 @@ router.get("/api/workouts/:id",(req,res) => {
   });
 });
 
+router.get("/api/workouts/range",(req,res) => {
+  console.log("In the Get Range ROUTE");
+  Workout.find({})
+  .then( dbWorkouts => {
+   // console.log("Got: " + JSON.stringify(dbWorkouts))
+    res.json(dbWorkouts);
+  }).catch(err => {
+    res.status(400).json(err);
+  });
+});
+
+
 router.get("/api/workouts",(req,res) => {
   console.log("In the Get ROUTE");
   Workout.find({})
